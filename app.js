@@ -68,7 +68,7 @@ store.on("error" , () => {
   console.log("Error in Mongo Session Store" , err);
 })
 
-const sessionOptions = { // Noww our session info. will storee on our atlas database.
+const sessionOptions = { // Now our session info. will store on our atlas database.
 
   store: store,
   secret : process.env.SECRET,
