@@ -111,8 +111,7 @@ body{
 
 .btn-editDelete{
     font-size:1.1rem !important;
-    width: 20rem !important;
-
+    width: 10rem !important;
 }
 
 .add-btn{
@@ -161,12 +160,16 @@ body{
 }
 
 /* Map Styling */
+/* Default Map Styling */
 #map {
-    height:500px;
-    width:100vh;
+    height: 400px;
+    width: 100vh;
 }
 
-
-
-
-
+/* Small Screen Styling */
+@media screen and (max-width: 500px) {
+    #map {
+        height: 250px; /* Adjust height for small screens */
+        width: 120%; /* Adjust width for small screens */
+    }
+}
