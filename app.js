@@ -116,11 +116,14 @@ app.get("/demouser" , async (req , res) => {
 
 });
 
+app.get("/" , (req , res) => {
+  res.redirect("/listings");
+})
       ///  Arrange listings request
-app.use("/listings" , listingRouter); // it means jitne bhii req. hamare server ke paas aaeigii with /listings , we do it's mapping in listings file that is present in routes folder...
-app.use("/listings/:id/reviews" , reviewRouter);
-app.use("/" , userRouter);
-
+      app.use("/listings" , listingRouter); // it means jitne bhii req. hamare server ke paas aaeigii with /listings , we do it's mapping in listings file that is present in routes folder...
+      app.use("/listings/:id/reviews" , reviewRouter);
+      app.use("/" , userRouter);
+        
 
         /// if our user send request to our server to any route that is not exist then this middleware will handle the error...
 app.all("*" , (req , res , next) => {

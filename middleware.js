@@ -56,7 +56,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     let { id , reviewId } = req.params;
     let review = await Review.findById(reviewId);
     if (!review) {
-        req.flash("error", "Listing not found!");
+        req.flash("error", "Review not found!");
         return res.redirect("/listings");
     }
     if (!res.locals.currUser || !review.author.equals(res.locals.currUser._id)) {
