@@ -14,7 +14,7 @@ const ejsMate = require("ejs-mate"); // Import ejs-mate for enhanced EJS templat
 const ExpressError = require("./utils/ExpressError.js"); // Import custom error handling class
 
 const listingRouter = require("./routes/listing.js"); // Import listing routes
-const reviewRouter = require("./routes/review.js/index.js"); // Import review routes
+const reviewRouter = require("./routes/REVIEW.JS"); // Import review routes
 const userRouter = require("./routes/user.js"); // Import user routes
 
 const session = require("express-session"); // Import express-session for session management
