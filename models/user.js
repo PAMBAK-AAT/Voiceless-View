@@ -10,7 +10,6 @@ const userSchema = new Schema( {
     },
 })
 
-userSchema.plugin(passportLocalMongoose); // Now It will add username , do hashing , do salting 
-                                        // and also authentication by default..
+userSchema.plugin(passportLocalMongoose); // Now It will add username , do hashing , do salting and also authentication by default..
 
 module.exports = mongoose.model("User" , userSchema);
