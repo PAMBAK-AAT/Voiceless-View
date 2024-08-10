@@ -1,118 +1,115 @@
+const Listing = require("../models/listing"); // Import the Listing model
+const Review = require("../models/review.js"); // Import the Review model
 
-const Listing = require("../models/listing");
-const Review = require("../models/review.js");
-//  For Mapping
+// For Mapping using Mapbox
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const mapToken = process.env.TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+const mapToken = process.env.TOKEN; // Access the Mapbox token from environment variables
+const geocodingClient = mbxGeocoding({ accessToken: mapToken }); // Initialize the Mapbox geocoding client
 
-// Home page
+// Controller for the home page that displays all listings
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+    const allListings = await Listing.find({}); // Fetch all listings from the database
+    res.render("listings/index.ejs", { allListings }); // Render the listings page with all listings data
 }
 
-// New Form page
+// Controller to render the form for creating a new listing
 module.exports.newForm = (req, res) => {
-    res.render("listings/new.ejs");
+    res.render("listings/new.ejs"); // Render the form for creating a new listing
 }
 
-// Create new Listing
-module.exports.createNewForm = async (req , res , next) => {
+// Controller to create a new listing
+module.exports.createNewForm = async (req, res, next) => {
   
-    // if(!req.body.listing){
-    //   throw  new ExpressError( 400  , "Enter valid data !");
-    // }
-
+    // Geocode the location provided by the user
     let response = await geocodingClient.forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1, // It tells how many possible longitude & latitude we can get at any particular location
-    })
-    .send()
+        query: req.body.listing.location, // The location provided by the user
+        limit: 1, // Limit the results to 1
+    }).send();
 
+    let url = req.file.path; // Get the URL of the uploaded image
+    let filename = req.file.filename; // Get the filename of the uploaded image
+    console.log(url, "...", filename);
 
-    let url = req.file.path;
-    let filename = req.file.filename;
-    console.log(url , "..." , filename);
+    const newListing = new Listing(req.body.listing); // Create a new listing with the provided data
+    newListing.owner = req.user._id; // Set the owner of the listing to the current user
+    newListing.image = { url, filename }; // Set the image for the listing
 
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = { url , filename };
+    newListing.geometry = response.body.features[0].geometry; // Save the geocoded coordinates in the listing
 
-    newListing.geometry = response.body.features[0].geometry; // To save coordinates of our location
+    let savedListing = await newListing.save(); // Save the new listing to the database
+    console.log(savedListing); // Log the saved listing
 
-    let savedListing = await newListing.save();
-    console.log(savedListing); // Thus here we saved our location in our database...
-
-    req.flash("success" , "New Listing Created!");
-    res.redirect("/listings");
-  
+    req.flash("success", "New Listing Created!"); // Flash a success message
+    res.redirect("/listings"); // Redirect to the listings page
 }
 
-// Show new listing
+// Controller to show a specific listing
 module.exports.showListing = async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate({ path: "reviews" , populate: {path: "author"} } ).populate("owner");
+    const listing = await Listing.findById(id)
+        .populate({ path: "reviews", populate: { path: "author" } }) // Populate the reviews and their authors
+        .populate("owner"); // Populate the owner of the listing
 
-    if(!listing){
-      req.flash("error" , "Your Listing does not exist!");
-      return res.redirect("/listings");
+    if (!listing) {
+        req.flash("error", "Your Listing does not exist!"); // Flash an error message if the listing does not exist
+        return res.redirect("/listings"); // Redirect to the listings page
     }
     console.log(listing);
-    res.render("listings/show.ejs", { listing });
+    res.render("listings/show.ejs", { listing }); // Render the show page with the listing data
 }
 
-// Edit the listing...
+// Controller to render the form for editing a listing
 module.exports.renderEditForm = async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
-    if(!listing){
-      req.flash("error" , "Your listing does not exist!");
-      return res.redirect("/listings");
+    const listing = await Listing.findById(id); // Find the listing to be edited
+
+    if (!listing) {
+        req.flash("error", "Your listing does not exist!"); // Flash an error message if the listing does not exist
+        return res.redirect("/listings"); // Redirect to the listings page
     }
+
     let originalImageUrl = listing.image.url;
-    originalImageUrl = originalImageUrl.replace("/upload" , "/upload/w_200,h_200");
-    res.render("listings/edit.ejs", { listing , originalImageUrl});
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_200,h_200"); // Adjust image size for the edit form
+    res.render("listings/edit.ejs", { listing, originalImageUrl }); // Render the edit form with the listing data and image
 }
 
-// Update Listing...
-
+// Controller to update a listing
 module.exports.updateListing = async (req, res) => {
-  let { id } = req.params;
+    let { id } = req.params;
 
-  if (!req.body.listing) { 
-      throw new ExpressError(400, "Enter valid data!");
-  }
+    if (!req.body.listing) { 
+        throw new ExpressError(400, "Enter valid data!"); // Throw an error if the listing data is invalid
+    }
 
-  // Find the listing to be updated
-  let listing = await Listing.findById(id);
+    // Find the listing to be updated
+    let listing = await Listing.findById(id);
 
-  // If a new image is uploaded, update the image field
-  if (typeof req.file !== "undefined") {
-      let url = req.file.path;
-      let filename = req.file.filename;
-      listing.image = { url, filename };
-  }
+    // If a new image is uploaded, update the image field
+    if (typeof req.file !== "undefined") {
+        let url = req.file.path;
+        let filename = req.file.filename;
+        listing.image = { url, filename };
+    }
 
-  // Update other fields of the listing
-  listing.title = req.body.listing.title;
-  listing.description = req.body.listing.description;
-  listing.price = req.body.listing.price;
-  listing.country = req.body.listing.country;
-  listing.location = req.body.listing.location;
+    // Update other fields of the listing
+    listing.title = req.body.listing.title;
+    listing.description = req.body.listing.description;
+    listing.price = req.body.listing.price;
+    listing.country = req.body.listing.country;
+    listing.location = req.body.listing.location;
 
-  // Save the updated listing
-  await listing.save();
+    // Save the updated listing
+    await listing.save();
 
-  req.flash("success", "Previous Listing Updated!");
-  res.redirect(`/listings/${id}`);
+    req.flash("success", "Previous Listing Updated!"); // Flash a success message
+    res.redirect(`/listings/${id}`); // Redirect to the updated listing's page
 }
 
-// Destroy Listing...
+// Controller to delete a listing
 module.exports.deleteListing = async (req, res) => {
     let { id } = req.params;
-    let deletedListing = await Listing.findByIdAndDelete(id);
+    let deletedListing = await Listing.findByIdAndDelete(id); // Find and delete the listing by ID
     console.log(deletedListing);
-    req.flash("success" , " Listing deleted!");
-    res.redirect("/listings");
+    req.flash("success", "Listing deleted!"); // Flash a success message
+    res.redirect("/listings"); // Redirect to the listings page
 }
