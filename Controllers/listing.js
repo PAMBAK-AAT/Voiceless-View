@@ -46,6 +46,9 @@ module.exports.createNewForm = async (req, res, next) => {
 // Controller to show a specific listing
 module.exports.showListing = async (req, res) => {
     let { id } = req.params;
+    // The reviews field is populated with full Review documents instead of just ObjectId references.
+    // Within each Review, the author field is populated with the corresponding User document.
+    // The owner field is populated with the full User document.
     const listing = await Listing.findById(id)
         .populate({ path: "reviews", populate: { path: "author" } }) // Populate the reviews and their authors
         .populate("owner"); // Populate the owner of the listing
@@ -54,7 +57,6 @@ module.exports.showListing = async (req, res) => {
         req.flash("error", "Your Listing does not exist!"); // Flash an error message if the listing does not exist
         return res.redirect("/listings"); // Redirect to the listings page
     }
-    console.log(listing);
     res.render("listings/show.ejs", { listing }); // Render the show page with the listing data
 }
 

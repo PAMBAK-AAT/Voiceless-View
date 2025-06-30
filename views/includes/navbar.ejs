@@ -1,100 +1,111 @@
-
 <style>
-  .size{
-    display:flex;
+  .size {
+    display: flex;
     align-items: center;
   }
-  .btn-search{
-    color:#fff;
+
+  .btn-search {
+    color: #fff;
     background-color: #fe424d;
     padding: 0.2rem 1rem 0.2rem 1rem;
   }
-  .btn-search:hover{
-    color:#fff;
+
+  .btn-search:hover {
+    color: #fff;
     background-color: #fe424d;
   }
-  .margin{
+
+  .margin {
     margin-left: 1rem;
   }
-  .iconSize{
+
+  .iconSize {
     font-size: larger;
   }
-  .btn-search i{
-    display:inline;
+
+  .btn-search i {
+    display: inline;
     margin-right: 0.5rem;
   }
-  .search-input{
+
+  .search-input {
     padding: 0.2rem 1rem 0.2rem 1rem;
     border-radius: 1rem;
     font-size: 1rem;
   }
-  
-/* Default styles for medium and large screens */
-.navbar-collapse.collapse.show {
-  background-color: white;
-  border-radius: 0;
-}
 
-.navbar-collapse.collapse.show .nav-link,
-.navbar-collapse.collapse.show .form-inline {
-  color: black;
-}
-
-/* Styles for small screens */
-@media (max-width: 768px) {
+  /* Default styles for medium and large screens */
   .navbar-collapse.collapse.show {
-    background-color: gray;
-    border-radius: 10px;
+    background-color: white;
+    border-radius: 0;
   }
 
   .navbar-collapse.collapse.show .nav-link,
   .navbar-collapse.collapse.show .form-inline {
-    color: white;
+    color: black;
   }
-}
 
+  /* Styles for small screens */
+  @media (max-width: 768px) {
+    .navbar-collapse.collapse.show {
+      background-color: gray;
+      border-radius: 10px;
+    }
 
-
+    .navbar-collapse.collapse.show .nav-link,
+    .navbar-collapse.collapse.show .form-inline {
+      color: white;
+    }
+  }
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass iconSize"></i></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link" href="/listings">Explore</a>
-        </div>
+  <div class="container-fluid">
+    <!-- <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass iconSize"></i></a> -->
+    <a class="navbar-brand text-primary fs-3" href="/listings">
+      <i class="fa-solid fa-eye-low-vision fa-beat-fade me-2"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
-        <!-- For Search box -->
-        <div class="navbar-nav ms-auto ">
-          
-          <form class="form-inline size ">
-            <input class="form-control mr-sm-2 search-input" type="search" placeholder=" Search tourist places" aria-label="Search">
-            <button class="btn btn-search margin " type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-          </form>
+      <div class="navbar-nav">
+        <a class="nav-link fw-bold text-primary text-uppercase d-flex align-items-center" href="/listings">
+          Voiceless View
+        </a>
+      </div>
 
-        </div>
-  
 
-        <!-- For sign up and log in -->
-        <div class="navbar-nav ms-auto">
+      <!-- For Search box -->
+      <div class="navbar-nav ms-auto ">
 
-          <a class="nav-link" href="/listings/new">Add new Listing</a>
-          <% if(!currUser){ %>
+        <form class="form-inline size ">
+          <input class="form-control mr-sm-2 search-input" type="search" placeholder=" Search posts ..."
+            aria-label="Search">
+          <button class="btn btn-search margin " type="submit"><i
+              class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
 
-            <a class="nav-link " href="/signup"><b>Sign up</b></a>
-            <a class="nav-link" href="/login"><b>Log in</b></a>
+      </div>
+
+
+      <!-- For sign up and log in -->
+      <div class="navbar-nav ms-auto">
+
+        <a class="nav-link" href="/listings/new">Add new Post</a>
+        <% if(!currUser){ %>
+
+          <a class="nav-link " href="/signup"><b>Sign up</b></a>
+          <a class="nav-link" href="/login"><b>Log in</b></a>
 
           <% } %>
 
-          <% if(currUser){ %>
-            <a class="nav-link" href="/logout"><b>Log out</b></a>
-          <% } %>
-          
-        </div>
+            <% if(currUser){ %>
+              <a class="nav-link" href="/logout"><b>Log out</b></a>
+              <% } %>
+
       </div>
     </div>
-  </nav>
+  </div>
+</nav>

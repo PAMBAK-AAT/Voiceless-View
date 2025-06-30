@@ -1,14 +1,10 @@
 
 
 
-
-
-
 <% layout("/layouts/boilerplate") -%>
 
 <script>
   const mapToken = "<%= process.env.TOKEN %>";
-  console.log('Map Token:', mapToken); // Add this line
   const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
 </script>
 
@@ -22,7 +18,7 @@
           <div class="card-body">
             <h3 class="card-title"><%= listing.title %></h3>
             <p class="card-text"><%= listing.description %></p>
-            <p class="card-text"><b>Price: &#8377;<%= listing.price.toLocaleString("en-IN") %></b></p>
+            <!-- <p class="card-text"><b>Price: &#8377;<%= listing.price.toLocaleString("en-IN") %></b></p> -->
             <p class="card-text"><b>Location:</b> <%= listing.location %></p>
             <p class="card-text"><b>Country:</b> <%= listing.country %></p>
           </div>
@@ -68,7 +64,7 @@
     
     <div class="col-md-6">
       <b><hr></b><br>
-      <h2>Leave a Review</h2>
+      <h2>Social Reviews...</h2>
       <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
 
         <div class="mb-3 mt-3">
@@ -92,7 +88,7 @@
           <label class="form-label" for="comment"><b>Comments</b></label>
           <textarea id="comment" name="review[comment]" rows="7" cols="20" class="form-control" required></textarea>
           <div class="invalid-feedback">
-            PLease write some comments for review...
+            Write comment for post ...
           </div>
         </div>
 
@@ -140,4 +136,3 @@
   <script src="/JS/map.js"></script>
 
 </div>
-
