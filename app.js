@@ -5,6 +5,8 @@ if (process.env.NODE_ENV != "production") {
 }
 // console.log(process.env.SECRET);
 
+
+
 const express = require("express"); // Import Express framework
 const app = express(); // Create an Express application
 const mongoose = require("mongoose"); // Import Mongoose for MongoDB interaction
@@ -42,6 +44,9 @@ main()
 async function main() {
   await mongoose.connect(dbUrl); // Connect to MongoDB using the provided URL
 }
+
+app.set("view cache", false);
+
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 app.set("views", path.join(__dirname, "views")); // Set the views directory for EJS templates

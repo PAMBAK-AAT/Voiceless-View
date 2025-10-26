@@ -96,7 +96,6 @@ module.exports.updateListing = async (req, res) => {
     // Update other fields of the listing
     listing.title = req.body.listing.title;
     listing.description = req.body.listing.description;
-    listing.price = req.body.listing.price;
     listing.country = req.body.listing.country;
     listing.location = req.body.listing.location;
 

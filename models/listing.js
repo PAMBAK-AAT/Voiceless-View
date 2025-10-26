@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const Review = require("./review.js"); // Add this line
 
 // Define the Listing schema
 const ListingSchema = new mongoose.Schema({
@@ -13,7 +14,6 @@ const ListingSchema = new mongoose.Schema({
     },
     location: { type: String },
     country: { type: String },
-    price: { type: Number},
 
     reviews: [
         {
